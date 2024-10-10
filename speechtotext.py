@@ -1,3 +1,4 @@
+# https://www.geeksforgeeks.org/python-convert-speech-to-text-and-text-to-speech/
 
 # Python program to translate
 # speech to text and text to speech
