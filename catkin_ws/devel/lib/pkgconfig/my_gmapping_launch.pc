@@ -1,0 +1,8 @@
+prefix=/home/ailabadmins/catkin_ws/devel
+
+Name: my_gmapping_launch
+Description: Description of my_gmapping_launch
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/ailabadmins/catkin_ws/devel
+
+Name: fair01_jackal
+Description: Description of fair01_jackal
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

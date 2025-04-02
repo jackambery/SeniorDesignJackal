@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>fair01_jackal</name>
+  <version>0.0.0</version>
+  <description>Jackal Integrated with SwiftNav, Velodyne, Microstrain, blackfly Camera</description>
+  <maintainer email="jatienza@clearpath.ai">Justin Atienza</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!--
+    Add dependencies here
+    At minimum you should include the _robot and _description packages for the base
+    platform.
+    e.g. husky_description and husky_robot
+  -->
+  <exec_depend>jackal_description</exec_depend>
+  <exec_depend>jackal_robot</exec_depend>
+
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

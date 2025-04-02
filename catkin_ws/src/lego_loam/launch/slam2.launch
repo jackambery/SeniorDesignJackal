@@ -1,0 +1,76 @@
+<launch>
+    <!-- Use actual time from robot -->
+    <param name="/use_sim_time" value="false" />
+    
+    <!-- Include Jackal description with front LiDAR configuration -->
+    <include file="$(find jackal_description)/launch/description.launch">
+        <arg name="config" value="base" />
+    </include>
+    
+    <!-- Increase TF buffer parameters -->
+    <param name="/tf_buffer_cache_time_secs" value="60.0" />
+    <param name="/tf_lookup_wait_timeout_secs" value="5.0" />
+
+    <!-- TF tree setup -->
+    <node pkg="tf" type="static_transform_publisher" name="map_to_odom" 
+          args="0 0 0 0 0 0 map odom 100" />
+          
+    <node pkg="tf" type="static_transform_publisher" name="map_to_camera_init" 
+          args="0 0 0 1.570795 0 1.570795 map camera_init 100" />
+          
+    <node pkg="tf" type="static_transform_publisher" name="camera_init_to_camera" 
+          args="0 0 0 0 0 0 camera_init camera 100" />
+          
+    <node pkg="tf" type="static_transform_publisher" name="camera_to_front" 
+          args="0 0 0 -1.570795 -1.570795 0 camera front 100" />
+          
+    <node pkg="tf" type="static_transform_publisher" name="front_to_front_laser" 
+          args="0 0 0 0 0 0 front front_laser 100" />
+          
+    <node pkg="tf" type="static_transform_publisher" name="front_laser_to_velodyne"
+          args="0 0 0 0 0 0 front_laser velodyne 100" />
+          
+   
+          
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+  	  <param name="use_gui" value="false"/>
+  	  <param name="rate" value="20"/>
+    </node>
+
+    <!-- Run LeGO-LOAM nodes with adjusted parameters -->
+    <node pkg="lego_loam" type="imageProjection" name="imageProjection" output="screen">
+        <param name="minimum_range" value="0.3" />
+        <param name="scan_line" value="16" />
+        <param name="segment_valid_point_num" value="3" />
+        <param name="segment_valid_line_num" value="3" /> 
+        <param name="segment_theta" value="30.0" />
+        <param name="debug_output" value="true" />  
+        <remap from="/velodyne_points" to="/front/points" />
+    </node>
+    
+    
+    <node pkg="lego_loam" type="featureAssociation" name="featureAssociation" output="screen">
+        <param name="sensor_height" value="0.33" />
+        <param name="scan_period" value="0.1" />
+        <param name="edge_threshold" value="0.3" />  <!-- Increased from default to detect more edges -->
+        <param name="surf_threshold" value="0.3" />  <!-- Increased from default to detect more surfaces -->
+        <param name="nearest_feature_dist_sqr" value="25.0" /> <!-- Increased to accept more distant features -->
+    </node>
+    
+    <node pkg="lego_loam" type="mapOptmization" name="mapOptmization" output="screen">
+        <param name="debug_output" value="true" />
+        <param name="publish_dense_map" value="true" />  <!-- Force dense map publishing -->
+        <param name="mapping_skip_frame" value="1" />    <!-- Process every frame -->
+        <param name="mapping_line_resolution" value="0.2" /> <!-- Lower resolution -->
+        <param name="mapping_plane_resolution" value="0.4" /> <!-- Lower resolution -->
+    </node>
+    
+    <node pkg="lego_loam" type="transformFusion" name="transformFusion" output="screen">
+        <param name="odomFrame" value="odom" />
+        <param name="baseFrame" value="base_link" />
+        <param name="debug_output" value="true" />
+    </node>
+    
+    <!-- Run Rviz after a delay to ensure nodes are started -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lego_loam)/launch/slam.rviz" launch-prefix="bash -c 'sleep 5; $0 $@'" />
+</launch>

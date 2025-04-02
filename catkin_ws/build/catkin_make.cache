@@ -1,0 +1,2 @@
+fair01_jackal:lego_loam:object_detection
+-DCATKIN_DEVEL_PREFIX=/home/ailabadmins/SeniorDesignJackal/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/ailabadmins/SeniorDesignJackal/catkin_ws/install -G Unix Makefiles

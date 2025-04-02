@@ -1,0 +1,8 @@
+prefix=/home/ailabadmins/catkin_ws/install
+
+Name: jackie
+Description: Description of jackie
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
